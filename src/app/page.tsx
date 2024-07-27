@@ -1,13 +1,15 @@
 import Image from "next/image";
 
+import ChatDrawer from "@/components/ChatDrawer";
+
 export default function Home() {
   return (
     <main className="min-w-screen flex min-h-screen flex-col items-center px-4">
       <div className="absolute h-full w-full">
         <div className="h-[15%] bg-gradient-to-r from-[#77d28c] to-[#4dbccf]"></div>
       </div>
-      <div className="z-50 h-full w-full">
-        <div className="mt-4 mb-4 flex w-full items-center justify-between gap-4">
+      <div className="z-50 h-full w-full translate-y-7">
+        <div className="mb-4 mt-4 flex w-full items-center justify-between gap-4">
           <i className="i-solar-arrow-left-outline size-6 bg-white" />
           <div className="flex grow flex-col text-white">
             <p className="text-sm">DELIVER TO</p>
@@ -53,10 +55,7 @@ export default function Home() {
             ),
           )}
         </div>
-        <div className="mb-4 gap-3 flex bg-gradient-to-r from-yellow-200 to-red-300 drop-shadow-lg p-4 rounded-lg">
-          <i className="i-solar-magic-stick-3-bold size-6" />
-          <p className="text-base font-bold">Click here if you're confused!</p>
-        </div>
+        <ChatDrawer />
         <div className="mb-4 grid grid-cols-2 gap-4">
           <div className="rounded-lg bg-pink-200 p-4">
             <h3 className="font-bold">Near Me</h3>
