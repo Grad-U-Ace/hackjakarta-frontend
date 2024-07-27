@@ -42,6 +42,8 @@ export default function ChatDrawer() {
     { content: string; isSelf: boolean }[]
   >([]);
 
+  const [inputType, setInputType] = useState<"text" | "quiz" | "">("");
+
   const openInput = useStateMachineInput(rive, "State Machine 1", "open_trig");
   const bingInput = useStateMachineInput(rive, "State Machine 1", "bing_trig");
   const closeInput = useStateMachineInput(
@@ -82,67 +84,89 @@ export default function ChatDrawer() {
           <DrawerTitle>GrabFood Chat</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <div className="flex grow flex-col">
-          <motion.div
-            layout
-            className={cn(
-              "relative flex grow before:absolute before:left-1/2 before:top-[60%] before:-z-10 before:h-20 before:w-32 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-gray-500 before:blur-3xl",
-              messages.length > 0 && "h-20 grow-0",
-            )}
-          >
-            <RiveComponent />
-          </motion.div>
-          <ScrollArea className="flex h-1 grow flex-col justify-end gap-2 p-5">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex gap-2 py-2 ${
-                  message.isSelf ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={cn("max-w-[80%] rounded-2xl px-4 py-2", {
-                    "rounded-tr-md bg-gradient-to-br from-green-500 to-green-600 text-white":
-                      message.isSelf,
-                    "rounded-tl-md border border-gray-300 text-gray-900":
-                      !message.isSelf,
-                  })}
-                >
-                  {message.content}
-                </div>
-              </div>
-            ))}
-            <ScrollBar />
-          </ScrollArea>
-          <div className="px-5">
-            <form action={handleSubmit} className="flex gap-2">
-              <Input
-                id="message"
-                name="message"
-                required
-                autoComplete="off"
-                placeholder="Did you already have something in mind?"
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-              />
-              <Button
-                type="submit"
-                variant="ghost"
-                size="icon"
-                className="transition-transform active:scale-90"
-                onClick={() => bingInput?.fire()}
-              >
-                <i className="i-solar-plain-bold size-6 text-gray-900/70" />
-              </Button>
-            </form>
+        {inputType === "" && (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-4">
+            <p className="text-center">
+              Hi I&apos;m your GrabFood assistant. I can help you find the
+              perfect meal. Not sure what to eat today?
+            </p>
+            <Button onClick={() => setInputType("quiz")}>
+              Yes, I&apos;m not sure what I want to eat
+            </Button>
+            <Button onClick={() => setInputType("text")}>
+              Chat with Assistant
+            </Button>
           </div>
-        </div>
+        )}
+        {inputType === "text" && (
+          <div className="flex grow flex-col">
+            <motion.div
+              layout
+              className={cn(
+                "relative flex grow before:absolute before:left-1/2 before:top-[60%] before:-z-10 before:h-20 before:w-32 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-gray-500 before:blur-3xl",
+                messages.length > 0 && "h-20 grow-0",
+              )}
+            >
+              <RiveComponent />
+            </motion.div>
+            <ScrollArea className="flex h-1 grow flex-col justify-end gap-2 p-5">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex gap-2 py-2 ${
+                    message.isSelf ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={cn("max-w-[80%] rounded-2xl px-4 py-2", {
+                      "rounded-tr-md bg-gradient-to-br from-green-500 to-green-600 text-white":
+                        message.isSelf,
+                      "rounded-tl-md border border-gray-300 text-gray-900":
+                        !message.isSelf,
+                    })}
+                  >
+                    {message.content}
+                  </div>
+                </div>
+              ))}
+              <ScrollBar />
+            </ScrollArea>
+            <div className="px-5">
+              <form action={handleSubmit} className="flex gap-2">
+                <Input
+                  id="message"
+                  name="message"
+                  required
+                  autoComplete="off"
+                  placeholder="Did you already have something in mind?"
+                  onFocus={handleInputFocus}
+                  onBlur={handleInputBlur}
+                />
+                <Button
+                  type="submit"
+                  variant="ghost"
+                  size="icon"
+                  className="transition-transform active:scale-90"
+                  onClick={() => bingInput?.fire()}
+                >
+                  <i className="i-solar-plain-bold size-6 text-gray-900/70" />
+                </Button>
+              </form>
+            </div>
+          </div>
+        )}
+        {inputType === "quiz" && (
+          <p>hello world</p>
+        )}
         <DrawerFooter>
           <DrawerClose>
             <Button
               variant="ghost"
               className="w-full"
-              onClick={() => setMessages([])}
+              onClick={() => {
+                setMessages([]);
+                setInputType("");
+              }}
             >
               <i className="i-ph-caret-down-bold size-8 text-gray-900" />
             </Button>
