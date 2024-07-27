@@ -51,7 +51,7 @@ export default function ChatDrawer() {
           </p>
         </div>
       </DrawerTrigger>
-      <DrawerContent className="flex h-svh flex-col rounded-none bg-white/10 px-2 backdrop-blur-3xl">
+      <DrawerContent className="flex h-svh flex-col rounded-none bg-white/70 px-2 backdrop-blur-3xl">
         <DrawerHeader>
           <DrawerTitle>GrabFood Chat</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
@@ -106,7 +106,7 @@ export default function ChatDrawer() {
                 size="icon"
                 className="transition-transform active:scale-90"
               >
-                <i className="i-solar-plain-bold size-6 text-gray-900" />
+                <i className="i-solar-plain-bold size-6 text-gray-900/70" />
               </Button>
             </form>
           </div>

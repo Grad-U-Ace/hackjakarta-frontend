@@ -4,7 +4,10 @@ import ChatDrawer from "@/components/ChatDrawer";
 
 export default function Home() {
   return (
-    <main className="min-w-screen flex min-h-screen flex-col items-center px-4">
+    <main
+      className="min-w-svh flex min-h-screen flex-col items-center bg-white px-4"
+      vaul-drawer-wrapper=""
+    >
       <div className="absolute h-full w-full">
         <div className="h-[15%] bg-gradient-to-r from-[#77d28c] to-[#4dbccf]"></div>
       </div>
