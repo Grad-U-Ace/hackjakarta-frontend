@@ -9,9 +9,9 @@ export default function Home() {
       vaul-drawer-wrapper=""
     >
       <div className="absolute h-full w-full">
-        <div className="h-[15%] bg-gradient-to-r from-[#77d28c] to-[#4dbccf]"></div>
+        <div className="h-28 bg-gradient-to-r from-[#77d28c] to-[#4dbccf]"></div>
       </div>
-      <div className="z-50 h-full w-full translate-y-7">
+      <div className="z-50 h-full w-full">
         <div className="mb-4 mt-4 flex w-full items-center justify-between gap-4">
           <i className="i-solar-arrow-left-outline size-6 bg-white" />
           <div className="flex grow flex-col text-white">
