@@ -40,7 +40,6 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
 ## Demo
 Watch our [Demo Video](https://) to see the chatbot in action.
@@ -52,7 +51,7 @@ Watch our [Demo Video](https://) to see the chatbot in action.
 - **Jaccard Index-Based Recommendations:** Use the Jaccard Index to analyze the similarity between a user's order history and other users' histories, providing personalized food recommendations.
 - **Integration with GrabFamily:** Enhance the chatbot to prompt meal decisions for other family members.
 
-
+## Deploy on Vercel
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
