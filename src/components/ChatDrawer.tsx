@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { motion } from "framer-motion";
 
@@ -19,18 +19,36 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import Rive, { useRive } from "@rive-app/react-canvas";
+import Rive, {
+  Alignment,
+  Fit,
+  Layout,
+  useRive,
+  useStateMachineInput,
+} from "@rive-app/react-canvas";
 
 export default function ChatDrawer() {
   const { rive, RiveComponent } = useRive({
     src: "glowy_ball.riv",
-    stateMachines: "bumpy",
+    stateMachines: "State Machine 1",
+    layout: new Layout({
+      fit: Fit.Cover,
+      alignment: Alignment.TopCenter,
+    }),
     autoplay: true,
   });
 
   const [messages, setMessages] = useState<
     { content: string; isSelf: boolean }[]
   >([]);
+
+  const openInput = useStateMachineInput(rive, "State Machine 1", "open_trig");
+  const bingInput = useStateMachineInput(rive, "State Machine 1", "bing_trig");
+  const closeInput = useStateMachineInput(
+    rive,
+    "State Machine 1",
+    "close_trig",
+  );
 
   const handleSubmit = (formData = new FormData()) => {
     const message = formData.get("message") as string;
@@ -40,6 +58,14 @@ export default function ChatDrawer() {
       setMessages((prev) => [...prev, { content: response, isSelf: false }]);
     });
   };
+
+  const handleInputFocus = useCallback(() => {
+    openInput?.fire();
+  }, [openInput]);
+
+  const handleInputBlur = useCallback(() => {
+    closeInput?.fire();
+  }, [closeInput]);
 
   return (
     <Drawer shouldScaleBackground setBackgroundColorOnScale={false}>
@@ -64,10 +90,7 @@ export default function ChatDrawer() {
               messages.length > 0 && "h-20 grow-0",
             )}
           >
-            <RiveComponent
-              onMouseEnter={() => rive && rive.play()}
-              onMouseLeave={() => rive && rive.pause()}
-            />
+            <RiveComponent />
           </motion.div>
           <ScrollArea className="flex h-1 grow flex-col justify-end gap-2 p-5">
             {messages.map((message, index) => (
@@ -99,12 +122,15 @@ export default function ChatDrawer() {
                 required
                 autoComplete="off"
                 placeholder="Did you already have something in mind?"
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
               />
               <Button
                 type="submit"
                 variant="ghost"
                 size="icon"
                 className="transition-transform active:scale-90"
+                onClick={() => bingInput?.fire()}
               >
                 <i className="i-solar-plain-bold size-6 text-gray-900/70" />
               </Button>
@@ -113,7 +139,11 @@ export default function ChatDrawer() {
         </div>
         <DrawerFooter>
           <DrawerClose>
-            <Button variant="ghost" className="w-full">
+            <Button
+              variant="ghost"
+              className="w-full"
+              onClick={() => setMessages([])}
+            >
               <i className="i-ph-caret-down-bold size-8 text-gray-900" />
             </Button>
           </DrawerClose>
