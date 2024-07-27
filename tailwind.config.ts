@@ -1,12 +1,17 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
+
+const {
+  iconsPlugin,
+  getIconCollections,
+} = require("@egoist/tailwindcss-icons");
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -34,7 +39,13 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwind-gradient-mask-image"),
+    iconsPlugin({
+      collections: getIconCollections(["ph", "solar"]),
+    }),
+  ],
+} satisfies Config;
 
-export default config
+export default config;
