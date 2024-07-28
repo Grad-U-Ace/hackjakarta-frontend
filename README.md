@@ -40,6 +40,10 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
+## Tech Stack
+- **Next.js:** We chose Next.js for its powerful features, including server-side rendering, static site generation, and API routes, which enhance performance and SEO.
+- **shadcn:** Shadcn is used for its flexibility in styling and theming, allowing us to create a visually appealing and consistent user interface. Its modular design system ensures that our components are reusable and maintainable.
+- **Framer Motion:** Framer Motion is implemented for its advanced animation capabilities, enabling us to create smooth and interactive user experiences. Its intuitive API and integration with React make it easy to add dynamic animations and transitions, enhancing the overall user engagement of the chatbot interface.
 
 ## Demo
 Watch our [Demo Video](https://) to see the chatbot in action.

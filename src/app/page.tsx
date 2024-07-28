@@ -5,7 +5,7 @@ import ChatDrawer from "@/components/ChatDrawer";
 export default function Home() {
   return (
     <main
-      className="min-w-svh flex min-h-screen flex-col items-center bg-white px-4"
+      className="relative flex min-h-screen flex-col items-center bg-white px-4"
       vaul-drawer-wrapper=""
     >
       <div className="absolute h-full w-full">
