@@ -100,10 +100,10 @@ export default function ChatDrawer() {
           <DrawerTitle className="bg-blend-color-burn">GrabFood AI</DrawerTitle>
         </DrawerHeader>
         {inputType === "" && (
-          <>
+          <div className="flex flex-col gap-4">
             <Button onClick={() => setInputType("text")}>Text</Button>
             <Button onClick={() => setInputType("quiz")}>Quiz</Button>
-          </>
+          </div>
         )}
         {inputType === "text" && (
           <>
