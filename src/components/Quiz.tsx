@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 // import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
+import { getMenuQuiz } from "@/app/actions";
 
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
@@ -28,28 +29,8 @@ export default function Quiz() {
 
   useEffect(() => {
     if (slide === 5) {
-      const fetchData = async () => {
-        try {
-            try {
-            const response = await fetch("http://localhost:8000/api/menus", {
-              method: "GET",
-              headers: {
-              "Content-Type": "application/json",
-              },
-              body: JSON.stringify(payload),
-            });
-            const data = await response.json();
-            console.log(data);
-            } catch (error) {
-            console.error(error);
-            }
-        } catch (error) {
-          // Handle the error here
-          console.error(error);
-        }
-      };
-
-      fetchData();
+      const res = getMenuQuiz(payload);
+      console.log(res)
     }
   }, [payload]);
 
