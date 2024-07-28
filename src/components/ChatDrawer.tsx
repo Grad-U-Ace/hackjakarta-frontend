@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { motion } from "framer-motion";
 
-import { sendMessage } from "@/app/actions";
+import { clearChat, sendMessage } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -19,13 +19,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import Rive, {
+import {
   Alignment,
   Fit,
   Layout,
   useRive,
   useStateMachineInput,
 } from "@rive-app/react-canvas";
+import RecommendationCarousel from "./RecommendationCarousel";
 
 export default function ChatDrawer() {
   const { rive, RiveComponent } = useRive({
@@ -33,16 +34,17 @@ export default function ChatDrawer() {
     stateMachines: "State Machine 1",
     layout: new Layout({
       fit: Fit.Cover,
-      alignment: Alignment.TopCenter,
+      alignment: Alignment.Center,
     }),
     autoplay: true,
   });
 
-  const [messages, setMessages] = useState<
-    { content: string; isSelf: boolean }[]
-  >([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const messageRef = useRef<HTMLDivElement>(null);
 
-  const [inputType, setInputType] = useState<"text" | "quiz" | "">("");
+  const [messages, setMessages] = useState<{ content: any; isSelf: boolean }[]>(
+    [],
+  );
 
   const openInput = useStateMachineInput(rive, "State Machine 1", "open_trig");
   const bingInput = useStateMachineInput(rive, "State Machine 1", "bing_trig");
@@ -57,8 +59,13 @@ export default function ChatDrawer() {
     setMessages((prev) => [...prev, { content: message, isSelf: true }]);
     sendMessage(formData).then((response) => {
       console.log(response);
+
       setMessages((prev) => [...prev, { content: response, isSelf: false }]);
     });
+
+    if (inputRef.current) {
+      inputRef.current.value = ""; // Clear the input field
+    }
   };
 
   const handleInputFocus = useCallback(() => {
@@ -68,6 +75,12 @@ export default function ChatDrawer() {
   const handleInputBlur = useCallback(() => {
     closeInput?.fire();
   }, [closeInput]);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      messageRef.current.scrollIntoView({ behavior: "smooth" }); //Use scrollIntoView to automatically scroll to my ref
+    }
+  }, [messages.length]);
 
   return (
     <Drawer shouldScaleBackground setBackgroundColorOnScale={false}>
@@ -79,85 +92,99 @@ export default function ChatDrawer() {
           </p>
         </div>
       </DrawerTrigger>
-      <DrawerContent className="flex h-svh flex-col rounded-none bg-white/70 px-2 backdrop-blur-3xl">
+      <DrawerContent className="flex h-svh flex-col rounded-none bg-white/70 backdrop-blur-3xl">
         <DrawerHeader>
-          <DrawerTitle>GrabFood Chat</DrawerTitle>
-          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          <DrawerTitle className="bg-blend-color-burn">GrabFood AI</DrawerTitle>
         </DrawerHeader>
-        {inputType === "" && (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-4">
-            <p className="text-center">
-              Hi I&apos;m your GrabFood assistant. I can help you find the
-              perfect meal. Not sure what to eat today?
-            </p>
-            <Button onClick={() => setInputType("quiz")}>
-              Yes, I&apos;m not sure what I want to eat
-            </Button>
-            <Button onClick={() => setInputType("text")}>
-              Chat with Assistant
-            </Button>
+        <div className="relative flex grow flex-col">
+          <div
+            className={cn(
+              "pointer-events-none absolute inset-0 left-1/2 top-1/4 -z-10 flex w-full grow -translate-x-1/2 -translate-y-1/2 transition-transform duration-700",
+              messages.length > 0 && "-translate-y-[95%]",
+            )}
+          >
+            <RiveComponent />
           </div>
-        )}
-        {inputType === "text" && (
-          <div className="flex grow flex-col">
+          <ScrollArea
+            className={cn(
+              "flex h-1 grow flex-col justify-end gap-2 transition-transform pb-28",
+              messages.length > 0 && "translate-y-20",
+            )}
+          >
             <motion.div
+              className="flex justify-start gap-2 px-5 py-2"
               layout
-              className={cn(
-                "relative flex grow before:absolute before:left-1/2 before:top-[60%] before:-z-10 before:h-20 before:w-32 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-gray-500 before:blur-3xl",
-                messages.length > 0 && "h-20 grow-0",
-              )}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
             >
-              <RiveComponent />
+              <div className="max-w-[80%] origin-top-left rounded-2xl rounded-tl-md border border-gray-300 px-4 py-2 text-gray-900">
+                Hi! I&apos;m your GrabFood AI Assitant. How can I help you find
+                the perfect meal today?
+              </div>
             </motion.div>
-            <ScrollArea className="flex h-1 grow flex-col justify-end gap-2 p-5">
-              {messages.map((message, index) => (
+            {messages.map((message, index) => (
+              <motion.div
+                key={index}
+                ref={index + 1 === messages.length ? messageRef : null}
+                className={cn(
+                  "flex w-screen gap-2 px-5 py-2",
+                  message.isSelf ? "justify-end" : "justify-start",
+                )}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+              >
                 <div
-                  key={index}
-                  className={`flex gap-2 py-2 ${
-                    message.isSelf ? "justify-end" : "justify-start"
-                  }`}
+                  className={cn("max-w-[80vw] rounded-2xl px-4 py-2", {
+                    "origin-top-right self-end rounded-tr-md border border-green-700 bg-gradient-to-br from-green-500 to-green-600 text-white":
+                      message.isSelf,
+                    "origin-top-left rounded-tl-md border border-gray-300 text-gray-900":
+                      !message.isSelf,
+                    "mb-[180px]":
+                      !message.isSelf &&
+                      typeof message.content === "object" &&
+                      message.content !== null,
+                  })}
                 >
-                  <div
-                    className={cn("max-w-[80%] rounded-2xl px-4 py-2", {
-                      "rounded-tr-md bg-gradient-to-br from-green-500 to-green-600 text-white":
-                        message.isSelf,
-                      "rounded-tl-md border border-gray-300 text-gray-900":
-                        !message.isSelf,
-                    })}
-                  >
-                    {message.content}
-                  </div>
+                  {typeof message.content === "object" &&
+                  message.content !== null ? (
+                    <RecommendationCarousel recommendations={message.content} />
+                  ) : (
+                    message.content
+                  )}
                 </div>
-              ))}
-              <ScrollBar />
-            </ScrollArea>
-            <div className="px-5">
-              <form action={handleSubmit} className="flex gap-2">
-                <Input
-                  id="message"
-                  name="message"
-                  required
-                  autoComplete="off"
-                  placeholder="Did you already have something in mind?"
-                  onFocus={handleInputFocus}
-                  onBlur={handleInputBlur}
-                />
-                <Button
-                  type="submit"
-                  variant="ghost"
-                  size="icon"
-                  className="transition-transform active:scale-90"
-                  onClick={() => bingInput?.fire()}
-                >
-                  <i className="i-solar-plain-bold size-6 text-gray-900/70" />
-                </Button>
-              </form>
-            </div>
+              </motion.div>
+            ))}
+            <ScrollBar />
+          </ScrollArea>
+          <div className="z-10 px-5">
+            <form action={handleSubmit} className="flex gap-2">
+              <Input
+                ref={inputRef}
+                id="message"
+                name="message"
+                required
+                autoComplete="off"
+                placeholder={
+                  messages.length === 0
+                    ? "Did you already have something in mind?"
+                    : "Ask again..."
+                }
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+              />
+              <Button
+                type="submit"
+                variant="ghost"
+                size="icon"
+                className="transition-transform active:scale-90"
+                onClick={() => bingInput?.fire()}
+              >
+                <i className="i-solar-plain-bold size-6 text-gray-900/70" />
+              </Button>
+            </form>
           </div>
-        )}
-        {inputType === "quiz" && (
-          <p>hello world</p>
-        )}
+        </div>
         <DrawerFooter>
           <DrawerClose>
             <Button
@@ -165,7 +192,7 @@ export default function ChatDrawer() {
               className="w-full"
               onClick={() => {
                 setMessages([]);
-                setInputType("");
+                clearChat();
               }}
             >
               <i className="i-ph-caret-down-bold size-8 text-gray-900" />
