@@ -32,22 +32,7 @@ export async function sendMessage(formData: FormData): Promise<any> {
 
   if (data.followUpType) {
     console.log(data.followUpType);
-    switch (data.followUpType) {
-      case "price":
-        return "price slider";
-      case "rating":
-        // Code for handling rating follow-up
-        break;
-      case "distance":
-        // Code for handling distance follow-up
-        break;
-      case "category":
-        // Code for handling category follow-up
-        break;
-      default:
-        // Code for handling unknown follow-up type
-        break;
-    }
+    return data.followUpType;
   }
 
   // Construct search params from the data array
