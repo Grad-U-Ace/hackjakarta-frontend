@@ -10,7 +10,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -26,6 +25,7 @@ import {
   useRive,
   useStateMachineInput,
 } from "@rive-app/react-canvas";
+import FollowUp from "./FollowUp";
 import RecommendationCarousel from "./RecommendationCarousel";
 
 export default function ChatDrawer() {
@@ -107,7 +107,7 @@ export default function ChatDrawer() {
           </div>
           <ScrollArea
             className={cn(
-              "flex h-1 grow flex-col justify-end gap-2 transition-transform pb-28",
+              "flex h-1 grow flex-col justify-end gap-2 pb-28 transition-transform",
               messages.length > 0 && "translate-y-20",
             )}
           >
@@ -150,7 +150,7 @@ export default function ChatDrawer() {
                   message.content !== null ? (
                     <RecommendationCarousel recommendations={message.content} />
                   ) : (
-                    message.content
+                    <FollowUp type={String(message.content)} />
                   )}
                 </div>
               </motion.div>
